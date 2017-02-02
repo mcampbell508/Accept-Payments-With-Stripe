@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Exception;
 use App\Http\Requests\RegistrationForm;
+use Exception;
 
 class SubscriptionsController extends Controller
 {
     /**
      * Create a new subscription for the user.
-     * 
-     * @param  RegistrationForm  $form 
-     * @return array 
+     *
+     * @param RegistrationForm $form
+     *
+     * @return array
      */
     public function store(RegistrationForm $form)
     {
@@ -24,13 +25,13 @@ class SubscriptionsController extends Controller
         }
 
         return [
-            'status' => 'Success!'
+            'status' => 'Success!',
         ];
     }
 
     /**
      * End a user's subscription.
-     * 
+     *
      * @return \RedirectResponse
      */
     public function destroy()

@@ -8,7 +8,7 @@ class SubscriptionTest extends TestCase
     use DatabaseTransactions, InteractsWithStripe;
 
     /** @test */
-    function it_subscribes_a_user()
+    public function it_subscribes_a_user()
     {
         $user = $this->makeSubscribedUser(['stripe_active' => false]);
 
@@ -22,7 +22,7 @@ class SubscriptionTest extends TestCase
     }
 
     /** @test */
-    function it_subscribes_a_user_using_a_coupon_code()
+    public function it_subscribes_a_user_using_a_coupon_code()
     {
         $user = factory('App\User')->create();
 
@@ -42,19 +42,19 @@ class SubscriptionTest extends TestCase
     }
 
     /** @test */
-    function it_cancels_a_users_subscription()
+    public function it_cancels_a_users_subscription()
     {
         // Given we have a subscribed user.
         $user = $this->makeSubscribedUser();
-        
+
         // When we cancel their subscription.
         $user->subscription()->cancel();
-        
+
         // Then it should be canceled on Stripe's end.
         $stripeSubscription = $user->subscription()->retrieveStripeSubscription();
 
         $this->assertNotNull($stripeSubscription->canceled_at);
-        
+
         $this->assertFalse($user->isSubscribed());
         $this->assertNotNull($user->subscription_end_at);
     }

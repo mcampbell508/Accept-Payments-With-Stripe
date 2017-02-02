@@ -26,8 +26,9 @@ class WebhooksController extends Controller
 
     /**
      * Handle when a successful charge has gone through on Stripe's end.
-     * 
-     * @param  object $payload
+     *
+     * @param object $payload
+     *
      * @return void
      */
     public function whenChargeSucceeded($payload)
@@ -35,8 +36,8 @@ class WebhooksController extends Controller
         $this->retrieveUser($payload)
              ->payments()
              ->create([
-                'amount' => $payload['data']['object']['amount'],
-                'charge_id' => $payload['data']['object']['id']
+                'amount'    => $payload['data']['object']['amount'],
+                'charge_id' => $payload['data']['object']['id'],
             ]);
     }
 
@@ -53,19 +54,21 @@ class WebhooksController extends Controller
     /**
      * Convert a Stripe event name to a method name.
      *
-     * @param  string $event
+     * @param string $event
+     *
      * @return string
      */
     protected function eventToMethod($event)
     {
-        return 'when' . studly_case(str_replace('.', '_', $event));
+        return 'when'.studly_case(str_replace('.', '_', $event));
     }
 
     /**
      * Fetch a user by their Stripe id.
-     * 
-     * @param  object $payload 
-     * @return User         
+     *
+     * @param object $payload
+     *
+     * @return User
      */
     protected function retrieveUser($payload)
     {

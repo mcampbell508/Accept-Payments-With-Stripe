@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use Stripe\Stripe;
 use Illuminate\Support\ServiceProvider;
+use Stripe\Stripe;
 
 class AppServiceProvider extends ServiceProvider
 {

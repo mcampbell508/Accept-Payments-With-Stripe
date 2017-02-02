@@ -10,7 +10,7 @@ class WebhooksControllerTest extends TestCase
     /** @test */
     public function it_converts_a_stripe_event_name_to_a_method_name()
     {
-        $name = (new WebhooksController)->eventToMethod('customer.subscription.deleted');
+        $name = (new WebhooksController())->eventToMethod('customer.subscription.deleted');
 
         $this->assertEquals('whenCustomerSubscriptionDeleted', $name);
     }
@@ -20,16 +20,16 @@ class WebhooksControllerTest extends TestCase
     {
         $user = factory('App\User')->create([
             'stripe_active' => 1,
-            'stripe_id' => 'fake_stripe_id'
+            'stripe_id'     => 'fake_stripe_id',
         ]);
 
         $this->post('stripe/webhook', [
             'type' => 'customer.subscription.deleted',
             'data' => [
                 'object' => [
-                    'customer' => $user->stripe_id
-                ]
-            ]
+                    'customer' => $user->stripe_id,
+                ],
+            ],
         ]);
 
         $this->assertFalse($user->fresh()->isSubscribed());

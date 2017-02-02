@@ -10,21 +10,21 @@ class Subscription
 {
     /**
      * The user associated with the subscription.
-     * 
+     *
      * @var User
      */
     protected $user;
 
     /**
      * An optional coupon for the user's subscription.
-     * 
+     *
      * @var string
      */
     protected $coupon;
 
     /**
      * Create a new Subscription instance.
-     * 
+     *
      * @param User $user
      */
     public function __construct(User $user)
@@ -34,8 +34,9 @@ class Subscription
 
     /**
      * Set the coupon that should be applied to the subscription.
-     * 
-     * @param  string $coupon
+     *
+     * @param string $coupon
+     *
      * @return $this
      */
     public function usingCoupon($coupon)
@@ -49,18 +50,19 @@ class Subscription
 
     /**
      * Create a new subscription.
-     * 
-     * @param  Plan   $plan  
-     * @param  string $token 
-     * @return void      
+     *
+     * @param Plan   $plan
+     * @param string $token
+     *
+     * @return void
      */
     public function create(Plan $plan, $token)
     {
         $customer = Customer::create([
-            'email' => $this->user->email,
+            'email'  => $this->user->email,
             'source' => $token,
             'plan'   => $plan->name,
-            'coupon' => $this->coupon
+            'coupon' => $this->coupon,
         ]);
 
         $subscriptionId = $customer->subscriptions->data[0]->id;
@@ -70,24 +72,25 @@ class Subscription
 
     /**
      * Cancel the user's Stripe subscription.
-     * 
-     * @param  boolean $atPeriodEnd 
-     * @return void          
+     *
+     * @param bool $atPeriodEnd
+     *
+     * @return void
      */
     public function cancel($atPeriodEnd = true)
     {
-        $customer = Customer::retrieve($this->user->stripe_id); 
+        $customer = Customer::retrieve($this->user->stripe_id);
 
         $subscription = $customer->cancelSubscription(['at_period_end' => $atPeriodEnd]);
 
         $endDate = Carbon::createFromTimestamp($subscription->current_period_end);
-        
-        $this->user->deactivate($endDate);        
+
+        $this->user->deactivate($endDate);
     }
 
     /**
      * Cancel the user's Stripe subscription immediately.
-     * 
+     *
      * @return void
      */
     public function cancelImmediately()
@@ -97,17 +100,17 @@ class Subscription
 
     /**
      * Retrieve a user's Stripe-specific customer instance.
-     * 
+     *
      * @return \Stripe\Customer
      */
     public function retrieveStripeCustomer()
     {
         return Customer::retrieve($this->user->stripe_id);
-    }    
+    }
 
     /**
      * Retrieve a user's Stripe-specific subscription.
-     * 
+     *
      * @return \Stripe\SubscriptionItem
      */
     public function retrieveStripeSubscription()

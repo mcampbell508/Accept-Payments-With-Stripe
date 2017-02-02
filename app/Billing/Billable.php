@@ -3,15 +3,15 @@
 namespace App\Billing;
 
 use App\Subscription;
-use App\Billing\Payment;
 
 trait Billable
 {
     /**
      * Fetch a user by their Stripe id.
-     * 
-     * @param  string $stripeId 
-     * @return User         
+     *
+     * @param string $stripeId
+     *
+     * @return User
      */
     public static function byStripeId($stripeId)
     {
@@ -20,25 +20,27 @@ trait Billable
 
     /**
      * Activate the user's subscription.
-     * 
-     * @param  string $customerId     
-     * @param  string $subscriptionId 
-     * @return bool                
+     *
+     * @param string $customerId
+     * @param string $subscriptionId
+     *
+     * @return bool
      */
     public function activate($customerId, $subscriptionId)
     {
         return $this->forceFill([
-            'stripe_id' => $customerId,
-            'stripe_active' => true,
+            'stripe_id'           => $customerId,
+            'stripe_active'       => true,
             'stripe_subscription' => $subscriptionId,
-            'subscription_end_at' => null
+            'subscription_end_at' => null,
         ])->save();
     }
 
     /**
      * Deactivate the user's subscription.
      *
-     * @param  mixed $endDate
+     * @param mixed $endDate
+     *
      * @return bool
      */
     public function deactivate($endDate = null)
@@ -46,14 +48,14 @@ trait Billable
         $endDate = $endDate ?: \Carbon\Carbon::now();
 
         return $this->forceFill([
-            'stripe_active' => false,
-            'subscription_end_at' => $endDate
+            'stripe_active'       => false,
+            'subscription_end_at' => $endDate,
         ])->save();
     }
 
     /**
      * Fetch a Subscription instance.
-     * 
+     *
      * @return Subscription
      */
     public function subscription()
@@ -63,17 +65,17 @@ trait Billable
 
     /**
      * Determine if the user is subscribed.
-     * 
-     * @return boolean
+     *
+     * @return bool
      */
     public function isSubscribed()
     {
-        return !! $this->stripe_active;
+        return (bool) $this->stripe_active;
     }
 
     /**
      * Fetch the user's payments.
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function payments()

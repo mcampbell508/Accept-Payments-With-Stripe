@@ -8,16 +8,16 @@ class Plan extends Model
 {
     /**
      * Database columns that require casting.
-     * 
+     *
      * @var array
      */
     protected $casts = [
-        'price' => 'integer'
+        'price' => 'integer',
     ];
 
     /**
      * Fields to guard.
-     * 
+     *
      * @var array
      */
     protected $guarded = [];

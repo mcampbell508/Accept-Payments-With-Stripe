@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use App\Plan;
-
 use Illuminate\Foundation\Http\FormRequest;
 
 class RegistrationForm extends FormRequest
@@ -15,7 +14,7 @@ class RegistrationForm extends FormRequest
      */
     public function authorize()
     {
-        return !! $this->user();
+        return (bool) $this->user();
     }
 
     /**
@@ -28,13 +27,13 @@ class RegistrationForm extends FormRequest
         return [
             'stripeEmail' => 'required|email',
             'stripeToken' => 'required',
-            'plan'        => 'required'
+            'plan'        => 'required',
         ];
     }
 
     /**
      * Persist the form.
-     * 
+     *
      * @return void
      */
     public function save()
